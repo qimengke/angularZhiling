@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html ng-app='app'>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<script src='js/plugins/angular.js'></script>
+	<script>
+		var app = angular.module('app',[]);
+		//yg 代表自定义指令 后面为指令的用途
+		//指令1 替换标签 插入模板
+		app.directive("autoComplite",function() {
+			return {
+				//E元素 A属性 C class M 注释 
+				restrict : 'EA', //对什么类型的节点生效
+				transclude:true,//是否对指令内部包含的内容进行保存 配合ng-transclude 使用
+				replace:true, //是否对当前指令的寄主进行替换
+				//template:"<div>自动补全</div>",
+				templateUrl:'select.html',
+				link:function(scope, element, attr ,controllers) {
+					//在指令生成模板的时，绑定事件 函数 变量 等等
+				}
+			}
+		})
+	</script>
+</head>
+<body>
+	<auto-complite></auto-complite>	
+	<div auto-complite><span>你好</span></div>
+	
+</body>
+</html>

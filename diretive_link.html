@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html ng-app='myApp'>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<script src='js/angular.js'></script>
+	<script>
+		
+		var app = angular.module('myApp',[]).controller('indexCtrl',function($scope) {
+			$scope.say = function(){
+				alert('调用');
+			}
+		})
+
+		//不设置scope情况下  link中scope与容器controller公用一块scope
+		app.directive("scopeDemo1",function() {
+			return {
+				restrict:'AE',
+				template:"<div></div>",
+				link:function(scope) {
+					console.info(scope);
+					scope.say();
+				}
+			}
+		})
+
+		//scope设置为true的清下 继承容器的作用域 创建自己的作用域
+		app.directive("scopeDemo2",function() {
+			return {
+				restrict:'AE',
+				template:"<div></div>",
+				scope:true,
+				link:function(scope) {
+					console.info(scope);
+					scope.say();
+				}
+			}
+		})
+
+		/*设置scope为false  link中scope与容器controller公用一块scope*/
+		app.directive("scopeDemo3",function() {
+			return {
+				restrict:'AE',
+				template:"<div></div>",
+				scope:false,
+				link:function(scope) {
+					console.info(scope);
+					scope.say();
+				}
+			}
+		})
+		//如果scope设置为{}对象, 继承controller容器scope作用域,但是会生成一块独立的作用域空间，不会自动调用父scope的变量或方法
+		app.directive("scopeDemo4",function() {
+			return {
+				restrict:'AE',
+				template:"<div></div>",
+				link:function(scope,element,attrs,controllers) {
+					//scope作用域 
+					//ng 本身对jq的核心方法进行了一个抽取 放在ng代码的内部，在程序初始化的时候进行调用 jqlite 如果引入jqeury 就使用jquery做为jqlite使用，如果没有引用 使用ng内部封装的。
+
+					console.info(element)
+						
+					element.css({
+						width:"120px",
+						height:"50px",
+						border:"2px solid red"
+					})
+						
+				}
+			}
+		})
+
+	</script>
+</head>
+<body ng-controller='indexCtrl'>
+	<div scope-demo4></div>
+</body>
+</html>

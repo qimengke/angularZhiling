@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en" ng-app='app'>
+<head>
+	<meta charset="UTF-8" />
+	<title>创建ng</title>
+	<script src='plugins/angular.js'></script>
+	<script>
+		var app = angular.module('app',[]);
+	
+		//服务:一个单例对象用于外部访问，一般不会主动创建实例
+		app.factory("dataService",function() {
+			var age = 0;
+			var app = {};
+			app.setVal = function(v) {
+				age = v;
+			}
+			app.getVal = function() {
+				return age;
+			}
+			console.info('执行一个服务');
+			return app;
+		})
+		
+		//第一种$rootScope 或 统一的父级controller定义变量
+		app.controller("indexCtrl",function($scope,$rootScope,dataService){
+			$scope.ck = function() {
+				$rootScope.c = "C";
+			}
+			//第二种方式 通过servcie 单例服务进行数据通信
+			$scope.service = function() {
+				dataService.setVal(55);
+			}
+		})
+		
+		app.controller('secondCtrl',function($scope,dataService) {
+			$scope.getService = function($scope) {
+				var v = dataService.getVal();
+				alert(v);
+			}
+		})
+		
+		app.controller("bodyCtrl",function($scope){
+			//监听一个name事件
+			$scope.$on("name",function(arr) {
+				console.info("监听name处理",arr);
+				$scope.$broadcast("uname",arr)
+			});
+			
+		})
+		app.controller("firstCtrl",function($scope){
+			//向上级传递一个事件
+			$scope.go = function() {
+				//向父级传递一个事件
+				$scope.$emit("name","杨光");
+			}
+		})
+		app.controller("thirdCtrl",function($scope){
+			$scope.$on('uname',function(arr) {
+				console.info('获取从firstCtrl中获取过来的变量',arr);
+			})
+		})
+		
+		
+	</script>
+</head>
+<body >
+	<div ng-controller='bodyCtrl'>
+		<div ng-controller='firstCtrl'>
+			<button ng-click='go()'>传输</button>
+		</div>
+		<div ng-controller='thirdCtrl'></div>
+	</div>
+	
+	<div ng-controller='indexCtrl'>
+	<span>$rootScope:</span><button ng-click='ck()'>传输数据C到second中</button>
+	<hr>
+	<span>service:</span><button ng-click='service()'>传输数据C到second中</button>
+	
+	</div>
+	<div ng-controller='secondCtrl'>{{c}}
+		<hr>
+		<button ng-click='getService()'>从服务取得参数</button>
+	<p>
+	</p></div>
+</body>
+</html>

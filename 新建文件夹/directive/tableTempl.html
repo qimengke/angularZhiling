@@ -1,0 +1,20 @@
+<div>
+	<div>我是第一个组件的主要内容，用来显示列表</div>
+	<div>
+		<table>	
+			<thead>
+				<td>序号</td>
+				<td>名称</td>
+				<td>操作</td>
+			</thead>
+			<tbody>
+				<tr ng-repeat='o in arr track by $index'>
+					<td>{{o.id}}</td>
+					<td>{{o.name}}</td>
+					<td><button ng-click='change()'>修改</button></td>
+				</tr>
+			</tbody>
+		</table>
+		<p ng-page></p>
+	</div>
+</div>

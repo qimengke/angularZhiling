@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html ng-app='myApp'>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<script src='js/plugins/angular.js'></script>
+	<script>
+		
+		var app = angular.module('myApp',[]).controller('indexCtrl',function($scope) {
+			$scope.go = function(){
+				console.info('呵呵呵');
+			}
+			$scope.way=function(){}
+			$scope.age = "18";
+			$scope.say = function(){
+				alert('调用');
+			}
+
+		})
+
+		//如果scope设置为{}对象, 继承controller容器scope作用域,但是会生成一块独立的作用域空间，不会自动调用父scope的变量或方法
+		app.directive("scopeDemo",function() {
+			return {
+				restrict:'AE',
+				template:"<div></div>",
+				scope:{
+					max:'@maxlength',
+					min:'&minlength',
+					age:'=age',
+					way:'=way',
+					go:'=go'
+				}, //可以声明给scope传递变量和值
+				//3种方式传递 = & @
+				//@通过在标签上定义属性,在scope使用@属性名传递变量
+				//&通过在标签上定义属性，在scope中使用&传递进来一个'函数',且只能是函数
+				//=通过在标签上定义属性，在父scope上寻找到匹配的变量和函数为当前的函数属性进行复制
+				link:function(scope) {
+					console.info(scope);
+					scope.min();
+					scope.go();
+				}
+			}
+		})
+
+	</script>
+</head>
+<body ng-controller='indexCtrl'>
+	<div scope-demo age='age' go='go' way='way' maxlength=5 minlength="say()"></div>
+</body>
+</html>

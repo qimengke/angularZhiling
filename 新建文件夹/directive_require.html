@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html ng-app='myApp'>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<script src='js/angular.js'></script>
+	<script>
+		
+		var app = angular.module('myApp',[]).controller('indexCtrl',function($scope) {
+			$scope.say = function(){
+				alert('调用');
+			}
+
+			$scope.objs = [
+				{id:0,name:"刘备"},
+				{id:1,name:"关羽"},
+				{id:2,name:"张飞"},
+			];
+
+		})
+
+		app.directive("ngTable",function() {
+			return {
+				restrict:'AE',
+				scope:{
+					arr:"=list"
+				},
+				controller:function($scope) {
+					$scope.change = function() {
+						alert('点击');
+					}
+					//上级指令给下级指令提供操作方式  使用this定义变量或方法，下级指令在link标签中的controllers进行调用
+					this.say = function() {
+						alert('共享');
+					}
+				},
+				templateUrl:"directive/tableTempl.html",
+				link:function(scope) {
+					//link 一般用于dom操作和样式更改
+				}
+			}
+		})
+
+			//指令依赖指令
+		app.directive("ngPage",function() {
+			return {
+				restrict:'AE',
+				require:["^ngTable"],
+				//只输入指令名称 在当前作用域寻找
+				//^ 向上级作用域寻找依赖的指令
+				//? 如果找不到对应的依赖指令，返回一个null
+				scope:{},//在当前父scope下创建一个子scope 不会继承scope的属性方法
+				controller:function($scope) {
+					//$scope.change();
+					console.info("指令嵌套指令",$scope);
+				},
+				link:function(scope,el,attr,controllers) {
+					//scope 当前指令的作用域
+					//el 代表ng封装的jq对象
+					//attr 为外部传递进来的参数(标签属性传递)
+					//controllers 指令依赖的另一块程序
+					//虽然可以通过 $.parent 调用父级scope作用域
+					//controllers 依赖的指令作用域模块 数组格式
+						console.info(controllers[0].say())
+
+				},
+				templateUrl:"directive/paginationTempl.html"
+			}
+		})
+
+	</script>
+</head>
+<body ng-controller='indexCtrl'>
+	<div ng-table list='objs'></div>
+</body>
+</html>

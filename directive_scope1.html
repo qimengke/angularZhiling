@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html ng-app='App'>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="js/plugins/angular.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var app=angular.module('App',[]).controller('indexCtrl',function($scope){
+				$scope.say=function(){
+					console.info('调用');
+				}
+			})
+			app.directive('scopeDemo1',function(){
+				return{
+					restrict:'AE',
+					template:'<div></div>',
+					link:function(scope) {
+//						console.info(scope);
+						scope.say();
+					}
+				}
+			})
+			app.directive('scopeDemo2',function(){
+				return{
+					restrict:'AE',
+					template:'<div></div>',
+					scope:true,
+					link:function(scope) {
+//						console.info(scope);
+						scope.say();
+					}
+				}
+			})
+			app.directive('scopeDemo3',function(){
+				return{
+					restrict:'AE',
+					template:'<div></div>',
+					scope:{ },
+					link:function(scope) {
+						console.info(scope);
+						scope.$parent.say();
+					}
+				}
+			})
+			app.directive('scopeDemo4',function(){
+				return{
+					restrict:'AE',
+					template:'<div></div>',
+					scope:false,
+					link:function(scope) {
+						console.info(scope);
+						scope.say();
+					}
+				}
+			})
+		</script>
+	</head>
+	<body ng-controller='indexCtrl'>
+	
+	 <!--<div scope-demo1></div>-->
+	<div scope-demo2></div> 
+	 <div scope-demo3></div> 
+	<div scope-demo4></div>
+</body>
+</html>
